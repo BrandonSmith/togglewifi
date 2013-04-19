@@ -18,13 +18,13 @@ function set_airport {
 function growl {
 
     # checks whether growl is installed
-#    if [ -f "/usr/local/bin/growlnotify" ]; then
-#        /usr/local/bin/growlnotify -m "$1" -a "AirportUtility.app"
-#    else
+    if [ -f "/usr/local/bin/growlnotify" ]; then
+        /usr/local/bin/growlnotify -m "$1" -a "AirportUtility.app"
+    else
         if [ -f "/opt/local/bin/terminal-notifier" ]; then
             /opt/local/bin/terminal-notifier -message "$1"
         fi
-    # fi
+    fi
 }
 
 # set default values
