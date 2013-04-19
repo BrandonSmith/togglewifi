@@ -1,4 +1,5 @@
 #!/bin/bash
+# originally not mine... found somewhere on the interwebs
 
 function set_airport {
 
