@@ -25,3 +25,12 @@ To uninstall:
 
     make uninstall
 
+Notification Center
+-------------------
+
+If you do not use Growl, OSX's Notification Center is used if
+`terminal-notifier` is installed:
+
+    sudo port install terminal-notifier
+
+
