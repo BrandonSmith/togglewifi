@@ -6,24 +6,24 @@ function set_airport {
     new_status=$1
 
     if [ $new_status = "On" ] ; then
-        /usr/sbin/networksetup -setairportpower en1 on
+        /usr/sbin/networksetup -setairportpower en0 on
         touch /var/tmp/prev_air_on
     else
-        /usr/sbin/networksetup -setairportpower en1 off
+        /usr/sbin/networksetup -setairportpower en0 off
         if [ -f "/var/tmp/prev_air_on" ]; then
             rm /var/tmp/prev_air_on
         fi
     fi
 }
 
-function growl {
+function notify {
 
-    # checks whether growl is installed
-    if [ -f "/usr/local/bin/growlnotify" ]; then
-        /usr/local/bin/growlnotify -m "$1" -a "AirportUtility.app"
+    if [ -f "/opt/local/bin/terminal-notifier" ]; then
+        /opt/local/bin/terminal-notifier -message "$1"
     else
-        if [ -f "/opt/local/bin/terminal-notifier" ]; then
-            /opt/local/bin/terminal-notifier -message "$1"
+        # checks whether growl is installed
+        if [ -f "/usr/local/bin/growlnotify" ]; then
+            /usr/local/bin/growlnotify -m "$1" -a "AirportUtility.app"
         fi
     fi
 }
@@ -47,12 +47,14 @@ if [ -f "/var/tmp/prev_air_on" ]; then
 fi
 
 # check actual current ethernet status
-if [ "`ifconfig en0 | grep \"status: active\"`" != "" ]; then
-    eth_status="On"
+if [ "`ifconfig | grep \"en5\"`" != "" ]; then 
+    if [ "`ifconfig en5 | grep \"status: active\"`" != "" ]; then
+        eth_status="On"
+    fi
 fi
 
 # check actual current AirPort status
-air_status=`/usr/sbin/networksetup -getairportpower en1 | awk '{ print $4 }'`
+air_status=`/usr/sbin/networksetup -getairportpower en0 | awk '{ print $4 }'`
 
 # if any change has occured, run external script
 if [ "$prev_air_status" != "$air_status" ] || [ "$prev_eth_status" != "$eth_status" ]; then
@@ -65,10 +67,10 @@ fi
 if [ "$prev_eth_status" != "$eth_status" ]; then
     if [ "$eth_status" = "On" ]; then
         set_airport "Off"
-        growl "Wired network detected. Turning AirPort off."
+        notify "Wired network detected. Turning AirPort off."
     else
         set_airport "On"
-        growl "No wired network detected. Turning AirPort on."
+        notify "No wired network detected. Turning AirPort on."
     fi
 else
     # if ethernet did not change
@@ -78,9 +80,9 @@ else
         set_airport $air_status
 
         if [ "$air_status" = "On" ]; then
-            growl "AirPort manually turned on."
+            notify "AirPort manually turned on."
         else
-            growl "AirPort manually turned off."
+            nofity "AirPort manually turned off."
         fi
     fi
 fi
