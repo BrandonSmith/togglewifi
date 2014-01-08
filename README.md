@@ -11,8 +11,10 @@ Features:
 * OSX 10.8+ notification if Growl is not present
 
 Assumptions:
-* Ethernet interface is en0
-* Aiport interface is en1
+* Thunderbolt Ethernet interface is en5
+* Aiport interface is en0
+
+(Other Macbook Pro confgurations are typically en0 as ethernet and en1 as Airpot)
 
 If these are different on your system, please edit `toggleAirport.sh` before installing. (If anybody knows
 to make this discoverable via bash, please let me know.)
